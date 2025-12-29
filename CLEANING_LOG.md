@@ -85,3 +85,76 @@ No logical duplicates detected.
 
 ### Result:
 Dataset is consistent, normalized, and ready for transformation and aggregation.
+
+
+## Dataset: Warehouse_Products_Tasty_Town_2025_RAW
+
+The raw dataset contains warehouse purchase records for products used in cocktail
+preparation and bar operations.
+
+Each row represents a single purchase entry of a specific product from a supplier,
+including purchase date, purchased quantity, unit of measure, net purchase cost,
+and invoice reference number.
+
+The dataset serves as a cost reference layer for ingredients and products and is
+intended to support later beverage cost and profitability calculations rather than
+sales performance analysis on its own.
+
+The data is recorded at purchase-event level and may contain multiple entries
+for the same product purchased on different dates or under different pricing conditions.
+
+### Step 1 – Standardization
+
+To ensure consistency across datasets and enable reliable joins, text-based
+columns were standardized.
+
+Applied transformations:
+- Product names were converted to uppercase and trimmed to remove extra spaces.
+- Product categories were converted to uppercase and trimmed.
+- Supplier names were standardized to uppercase for consistency.
+
+Standardization aligns this dataset with the sales data structure and reduces
+the risk of join mismatches caused by inconsistent text formatting.
+
+### Step 2 – Date normalization
+
+Date columns were reviewed to ensure consistent formatting across datasets.
+
+- Purchase dates in the warehouse dataset were validated and standardized to ISO format (YYYY-MM-DD).
+- This format was selected to ensure compatibility with SQL-based analysis (BigQuery)
+  and to avoid ambiguity between regional date formats.
+
+Consistent date formatting enables reliable time-based joins, aggregations,
+and filtering during analysis.
+
+### Step 3 Unit normalization
+
+Measurement units were standardized to ensure consistency across purchase records.
+A standardized purchase quantity was calculated using unit multipliers to convert
+all quantities into base units (grams or milliliters).
+
+No cost calculations or analytical metrics were derived at this stage.
+This step prepares the dataset for accurate cost analysis in later transformations.
+
+#### Step 4 Handling non-convertible units and missing cost data
+
+Some warehouse products (e.g. foams, egg whites, vanilla pods, ice cubes, fresh preparations)
+are purchased in non-linear, count-based, or batch-based units that cannot be reliably
+converted into standard mass or volume units (grams or milliliters).
+
+Additionally, for certain components (e.g. foams, modifiers, fresh prep ingredients),
+direct unit-level cost information is not available in the source data.
+
+For these items:
+- `unit_standardized` and `unit_multiplier` remain NULL
+- standardized purchase quantity is not calculated
+- unit-level cost is intentionally left as NULL
+
+This approach reflects real-world bar operations, where such components are typically
+managed and costed at a batch or operational level rather than per unit.
+
+No cost imputation or estimation was applied at the cleaning stage.
+These items will be handled explicitly during later transformation or analysis phases,
+or excluded from unit-based beverage cost calculations where appropriate.
+
+
