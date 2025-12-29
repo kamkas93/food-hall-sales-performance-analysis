@@ -29,3 +29,9 @@ All data has been anonymized and modified for analytical purposes. Product names
 
 The datasets are intended solely for educational and portfolio demonstration purposes.
 
+## Data Cleaning & Preparation (PREPARE Phase)
+
+The raw datasets required multiple cleaning and standardization steps
+before analysis. The cleaning process focused on improving data consistency,
+ensuring correct data types, and preparing the data for aggregation and joins.
+
